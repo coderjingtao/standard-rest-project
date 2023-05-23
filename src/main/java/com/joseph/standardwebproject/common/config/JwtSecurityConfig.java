@@ -7,15 +7,12 @@ import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -35,9 +32,9 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.UUID;
 
-@Configuration
-@EnableWebSecurity
-@EnableMethodSecurity
+//@Configuration
+//@EnableWebSecurity
+//@EnableMethodSecurity
 public class JwtSecurityConfig {
 
     @Bean
@@ -53,6 +50,7 @@ public class JwtSecurityConfig {
                 //disable csrf (cross-site request forgery) since session (browser) is not used
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                //decode the JWT token from client
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
                 .httpBasic(Customizer.withDefaults())
                 .headers(header -> header.frameOptions().sameOrigin())
@@ -88,8 +86,7 @@ public class JwtSecurityConfig {
     }
 
     @Bean
-    public RSAKey rsaKey(){
-        KeyPair keyPair = keyPair();
+    public RSAKey rsaKey(KeyPair keyPair){
         return new RSAKey
                 .Builder((RSAPublicKey) keyPair.getPublic())
                 .privateKey((RSAPrivateKey) keyPair().getPrivate())
@@ -98,8 +95,8 @@ public class JwtSecurityConfig {
     }
 
     @Bean
-    public JWKSource<SecurityContext> jwkSource(){
-        JWKSet jwkSet = new JWKSet(rsaKey());
+    public JWKSource<SecurityContext> jwkSource(RSAKey rsaKey){
+        JWKSet jwkSet = new JWKSet(rsaKey);
         return ((jwkSelector, securityContext) -> jwkSelector.select(jwkSet));
     }
 
@@ -109,9 +106,9 @@ public class JwtSecurityConfig {
     }
 
     @Bean
-    public JwtDecoder jwtDecoder() throws JOSEException {
+    public JwtDecoder jwtDecoder(RSAKey rsaKey) throws JOSEException {
         return NimbusJwtDecoder
-                .withPublicKey(rsaKey().toRSAPublicKey())
+                .withPublicKey(rsaKey.toRSAPublicKey())
                 .build();
     }
 }

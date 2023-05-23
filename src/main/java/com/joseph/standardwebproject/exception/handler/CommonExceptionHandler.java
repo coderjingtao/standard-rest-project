@@ -44,7 +44,7 @@ public class CommonExceptionHandler {
      * 当前环境，从配置文件中取得
      */
     @Value("${spring.profiles.active}")
-    private String profile;
+    private String currentEnv;
 
 
 
@@ -79,10 +79,11 @@ public class CommonExceptionHandler {
     @ResponseBody
     public ErrorResponse handleServletException(Exception e){
         log.error(e.getMessage(),e);
-        if(ENV_PROD.equals(profile)){
-            return new ErrorResponse(BusinessResponseEnum.SERVER_ERROR.getCode(), BusinessResponseEnum.SERVER_ERROR.getMessage());
+        if(ENV_PROD.equals(currentEnv)){
+            //return new ErrorResponse(BusinessResponseEnum.SERVER_ERROR.getCode(), BusinessResponseEnum.SERVER_ERROR.getMessage());
+            return new ErrorResponse(BusinessResponseEnum.NETWORK_ERROR.getCode(), BusinessResponseEnum.NETWORK_ERROR.getMessage());
         }
-        return new ErrorResponse(BusinessResponseEnum.NETWORK_ERROR.getCode(), BusinessResponseEnum.NETWORK_ERROR.getMessage());
+        return new ErrorResponse(BusinessResponseEnum.SERVER_ERROR.getCode(), e.getMessage());
     }
 
     /**
@@ -124,9 +125,10 @@ public class CommonExceptionHandler {
     @ResponseBody
     public ErrorResponse handleException(Exception e){
         log.error(e.getMessage(),e);
-        if(ENV_PROD.equals(profile)){
-            return new ErrorResponse(BusinessResponseEnum.SERVER_ERROR.getCode(), BusinessResponseEnum.SERVER_ERROR.getMessage());
+        if(ENV_PROD.equals(currentEnv)){
+            //return new ErrorResponse(BusinessResponseEnum.SERVER_ERROR.getCode(), BusinessResponseEnum.SERVER_ERROR.getMessage());
+            return new ErrorResponse(BusinessResponseEnum.NETWORK_ERROR.getCode(), BusinessResponseEnum.NETWORK_ERROR.getMessage());
         }
-        return new ErrorResponse(BusinessResponseEnum.NETWORK_ERROR.getCode(), BusinessResponseEnum.NETWORK_ERROR.getMessage());
+        return new ErrorResponse(BusinessResponseEnum.SERVER_ERROR.getCode(), e.getMessage());
     }
 }
