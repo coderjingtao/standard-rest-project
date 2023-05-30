@@ -9,3 +9,4 @@ Typical Features for a standard REST project :
 * Spring Security Config
 * JWT authentication
 * Log Aspect
+* Scheduled Job
