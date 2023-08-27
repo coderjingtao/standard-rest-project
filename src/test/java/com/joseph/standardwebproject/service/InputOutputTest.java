@@ -4,7 +4,7 @@ import org.junit.jupiter.api.*;
 
 import java.io.*;
 
-class UserServiceTest {
+class InputOutputTest {
 
     @BeforeAll
     static void beforeAll(){
