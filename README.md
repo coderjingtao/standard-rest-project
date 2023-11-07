@@ -10,3 +10,4 @@ Typical Features for a standard REST project :
 * JWT authentication
 * Log Aspect
 * Scheduled Job
+* Data Masking
