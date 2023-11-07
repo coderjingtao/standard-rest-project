@@ -1,6 +1,7 @@
 package com.joseph.standardwebproject.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.joseph.standardwebproject.datamask.DataMasking;
+import com.joseph.standardwebproject.datamask.DataMaskingFunc;
 import lombok.Data;
 
 @Data
@@ -9,6 +10,7 @@ public class User {
     private int id;
     private String name;
     private int age;
-    @JsonIgnore
+    //@JsonIgnore
+    @DataMasking(maskFunc = DataMaskingFunc.ALL_MASK)
     private String password;
 }

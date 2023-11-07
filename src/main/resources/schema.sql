@@ -1,4 +1,4 @@
-drop table course;
+drop table if exists course;
 create table course(
     id bigint not null,
     name varchar(255) not null,
@@ -6,7 +6,7 @@ create table course(
     primary key (id)
 );
 
-drop table item;
+drop table if exists item;
 create table item
 (
     id     bigint       not null,
@@ -15,7 +15,7 @@ create table item
     primary key (id)
 );
 
-drop table item_detail;
+drop table if exists item_detail;
 create table item_detail
 (
     id     bigint       not null,
